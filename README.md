@@ -1,4 +1,4 @@
-# Scopping-Project
+# Scoping-Project
 ## To-Do:
 1. Mobile app
   - The mobile app is only used by the examiner.
