@@ -19,6 +19,11 @@
 - App Demo: 
 
 ## Project Wiki <a name="wiki"></a>
+### Run the App
+1. Run `npm install` command in the both the admin-portal-1 directory and the admin-portal-1/client folder. 
+2. Once the installation is done, run the command `npm run dev` in the admin-portal-1 directory. 
+   Doing this should start the back-end server and the front-end at the same time.
+   - If you want to just run the front-end, navigate into the client folder and run the command `npm start`.
 
 ## To-Do:
 1. Mobile app
