@@ -12,3 +12,5 @@
 /captures
 .externalNativeBuild
 .cxx
+/admin-portal-1/node_modules
+/admin-portal-1/client/node_modules
