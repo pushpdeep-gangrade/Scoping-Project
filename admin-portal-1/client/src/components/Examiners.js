@@ -21,16 +21,27 @@ export class Examiners extends Component {
                 <Label for="email">Email</Label>
                 <Input type="email" name="email" id="email" placeholder="Email" onChange={this.props.onChange} />
             </FormGroup>
+            <FormGroup>
+                <Label for="address">Address</Label>
+                <Input type="text" name="address" id="address" placeholder="Address" onChange={this.props.onChange} />
+            </FormGroup>
+            <FormGroup>
+                <Label for="age">Age</Label>
+                <Input type="number" name="age" id="age" placeholder="Age" onChange={this.props.onChange} />
+            </FormGroup>
             <Button onClick={this.props.onSubmitClick}>Submit</Button>
         </Form>);
 
         for (const [index, value] of this.props.examinersList.entries()) {
             items.push(<tr id={value.Email}>
                     <td headers="rowNum">{index+1}</td>
-                    <td headers="firstName">{value.FirstName}</td>
-                    <td headers="lastName">{value.LastName}</td>
-                    <td headers="email">{value.Email}</td>
+                    <td headers="firstName">{value.firstname}</td>
+                    <td headers="lastName">{value.lastname}</td>
+                    <td headers="email">{value.email}</td>
+                    <td headers="address">{value.address}</td>
+                    <td headers="age">{value.age}</td>
                     <td headers="viewScoresBtn"><Button>View Scores</Button></td>
+                    <td headers="deleteBtn"><Button onClick={(event) => this.props.onDeleteClick(event,index)}>Delete Examiner</Button></td>
                 </tr>
              )
         }
@@ -45,7 +56,10 @@ export class Examiners extends Component {
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>
+                        <th>Address</th>
+                        <th>Age</th>
                         <th>View Scores</th>
+                        <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>
