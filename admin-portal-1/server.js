@@ -55,6 +55,7 @@ var authMiddleware = function (req, res, next) {
     }
 }
 
+
 // login
 app.post('/v1/examiner/login', function (req, res) {
     if (typeof req.body.email === "undefined" || typeof req.body.password === "undefined") {
@@ -177,7 +178,6 @@ app.post('/v1/qr/examiner', function (req, res) {
                 email: req.body.email,
             };
             client.db('Scoping').collection('Examiner').findOne(myObj, function (err, result) {
-                //console.log(result._id);
                 if (err)
                     res.status(INTERNAL_SERVER_ERROR).send(err);
                 else if (result == null)
@@ -190,8 +190,9 @@ app.post('/v1/qr/examiner', function (req, res) {
                     });
                     QRCode.toString(token, {
                         type: 'terminal',
-                        width: 20,
-                        height: 20,}, function (err, url) {
+                        w: 10,
+                        h: 10
+                    } , function (err, url) {
                         res.header("AuthorizationKey", token).status(OK).send(url);
                         console.log(url)
                     })
