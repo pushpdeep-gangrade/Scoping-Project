@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">Scopping</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="next">Next</string>
+    <string name="prev">Prev</string>
+    <string name="no_evidence">No Evidence</string>
+    <string name="superior">Superior</string>
+
+
+    <string name="q1">1. Poster content is of professional quality and indicates a mastery of the project subject matter.</string>
+    <string name="q2">2. The presentation is organized, engaging, and includes a thorough description of the design and the implementation of the design.</string>
+    <string name="q3">3. All the team members are suitably attired, are polite, demonstrate full knowledge of material, and can answer all relevant questions.</string>
+    <string name="q4">4. The work product (model,rototype, documentation, set or computer simulation) is of professional quality in all respects.</string>
+    <string name="q5">5. The team implemented novel approaches and/or solutions in the development of the project.</string>
+    <string name="q6">6. The project has the potential to enhance the reputation of the Inovative Computing Project and/or CCI/DSI. </string>
+    <string name="q7">7. The team successfully explained the scope and results of their project in no more than 5 minutes.</string>
+
+
 </resources>
