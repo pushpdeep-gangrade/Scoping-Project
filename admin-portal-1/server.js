@@ -344,7 +344,7 @@ app.get('/v1/examiner', authMiddleware, function (req, res) {
 
 
 // Create teams
-app.post('/v1/teams', function (req, res) {
+app.post('/v1/teams', authMiddleware, function (req, res) {
    // console.log("create teams: " + req.encode);
     client = new MongoClient(url, {
         useNewUrlParser: true,
