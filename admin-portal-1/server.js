@@ -56,8 +56,44 @@ var authMiddleware = function (req, res, next) {
 }
 
 
-// admin login
+// admin login without password encyption check
 app.post('/v1/admin/login', function (req, res) {
+    if (typeof req.body.email === "undefined" || typeof req.body.password === "undefined") {
+        res.status(BAD_REQUEST).send("Bad request Check request Body");
+    } else {
+        client = new MongoClient(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
+        client.connect().then(() => {
+            var myObj = {
+                emailId: req.body.email,
+            };
+            client.db('Scoping').collection('Admin').findOne(myObj, function (err, result) {
+                //console.log(result._id);
+                if (err)
+                    res.status(INTERNAL_SERVER_ERROR).send(err);
+                else if (result == null)
+                    res.status(OK).send("No such user found");
+                else if (result != null && req.body.password === result.password) {
+                    var token = jwt.sign({
+                        u_id: result._id,
+                    }, 'secret', {
+                        expiresIn: 60 * 60
+                    });
+                    res.header("AuthorizationKey", token).status(OK).send("Login Successful");
+                }
+                else {
+                    res.status(OK).send("Invalid Credentials");
+                }
+                return client.close();
+            })
+        });
+    }
+});
+
+//admin login API using bcrypt
+/* app.post('/v1/admin/login', function (req, res) {
     if (typeof req.body.email === "undefined" || typeof req.body.password === "undefined") {
         res.status(BAD_REQUEST).send("Bad request Check request Body");
     } else {
@@ -90,7 +126,7 @@ app.post('/v1/admin/login', function (req, res) {
             })
         });
     }
-});
+}); */
 
 // login
 app.post('/v1/examiner/login', function (req, res) {
@@ -162,41 +198,8 @@ app.post('/v1/examiner/login/qr', authMiddleware, function (req, res) {
         });
 });
 
-//admin login API
-app.post('/v1/admin/login', function (req, res) {
-    if (typeof req.body.email === "undefined" || typeof req.body.password === "undefined") {
-        res.status(BAD_REQUEST).send("Bad request Check request Body");
-    } else {
-        client = new MongoClient(url, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
-        client.connect().then(() => {
-            var myObj = {
-                emailId: req.body.email,
-            };
-            client.db('Scoping').collection('Admin').findOne(myObj, function (err, result) {
-                //console.log(result._id);
-                if (err)
-                    res.status(INTERNAL_SERVER_ERROR).send(err);
-                else if (result == null)
-                    res.status(OK).send("No such user found");
-                else if (result != null && bcrypt.compareSync(req.body.password, result.password)) {
-                    var token = jwt.sign({
-                        u_id: result._id,
-                    }, 'secret', {
-                        expiresIn: 60 * 60
-                    });
-                    res.header("AuthorizationKey", token).status(OK).send("Login Successful");
-                }
-                else {
-                    res.status(OK).send("Invalid Credentials");
-                }
-                return client.close();
-            })
-        });
-    }
-});
+
+
 
 
 

@@ -1,8 +1,20 @@
 import React, { Component } from 'react';
 import { Form, Button, Table, FormGroup, Label, Input} from 'reactstrap';
+var QRCode = require('qrcode.react');
+
+{/* <canvas id="canvas"></canvas>
+ 
+ <script src="/build/qrcode.min.js"></script>
+ <script>
+   QRCode.toCanvas(document.getElementById('canvas'), 'sample text', function (error) {
+     if (error) console.error(error)
+     console.log('success!');
+   })
+ </script>  */}
 
 export class Examiners extends Component {
     static displayName = Examiners.name;
+
 
     render() {
         let items = [];
@@ -42,6 +54,7 @@ export class Examiners extends Component {
                     <td headers="age">{value.age}</td>
                     <td headers="viewScoresBtn"><Button>View Scores</Button></td>
                     <td headers="deleteBtn"><Button onClick={(event) => this.props.onDeleteClick(event,index)}>Delete Examiner</Button></td>
+                    <td headers="qrCodeBtn"><Button onClick={(event) => this.props.onQRCodeClick(event,index)}>Generate QR Code</Button></td>
                 </tr>
              )
         }
@@ -60,13 +73,15 @@ export class Examiners extends Component {
                         <th>Age</th>
                         <th>View Scores</th>
                         <th>Delete</th>
+                        <th>Generate QR Code</th>
                         </tr>
                     </thead>
                     <tbody>
                        {items}
                     </tbody>
                 </Table>
-                <Button onClick={this.props.onCreateClick}>Create Examiner</Button><br/>
+                <Button onClick={this.props.onCreateClick}>Create Examiner</Button>
+                {this.props.showQRCode === false ? true : <div style={{textAlign: "center"}}><img height="400px" width="400px" src={this.props.qrcodeStr}/></div>}
                 {this.props.toggleForm === false ? true : examinersForm}
             </div>
         );

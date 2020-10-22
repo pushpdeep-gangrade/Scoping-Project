@@ -22,6 +22,7 @@ export class LoginContainer extends Component {
 
         this.handleClick = this.handleClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.checkUser = this.checkUser.bind(this);
 
     }
 
@@ -40,11 +41,42 @@ export class LoginContainer extends Component {
         }
     }
 
+    async checkUser() {
+        var body = {
+            email: this.state.email,
+            password: this.state.password
+        }
+
+        const response = await fetch('/v1/admin/login', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body)
+        });
+
+        const data = await response.text();
+
+        console.log(data)
+
+        if (data === "Login Successful") {
+            const token = await response.headers.get("AuthorizationKey");
+            console.log(token);
+            alert(data);
+            this.props.setUser(data, token);
+            this.setState({ user: data, successfulLogin: true });
+        }
+        else {
+            alert(data);
+        }
+
+    }
+
     handleClick(event) {
         event.preventDefault();
         //Will eventually pull user from the database
-        this.props.setUser(this.state.user);
-        this.setState({ successfulLogin: true });
+        this.checkUser();
     }
 
   

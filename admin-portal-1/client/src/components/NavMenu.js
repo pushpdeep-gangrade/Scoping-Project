@@ -43,10 +43,10 @@ export class NavMenu extends Component {
           <NavLink tag={Link} className="text-dark" to="/profile">Profile</NavLink>
       </NavItem>);
 
-      if (this.props.user !== null) {
+      if (this.props.cookies.get('authorizationToken') !== undefined) {
           usertf = true;
           log = (<NavItem>
-              <NavLink tag={Link} className="text-dark" to="/login" onClick={() => this.props.setUser(null)}>Logout</NavLink>
+              <NavLink tag={Link} className="text-dark" to="/login" onClick={() => this.props.setUser(null, null)}>Logout</NavLink>
           </NavItem>);
       }
     

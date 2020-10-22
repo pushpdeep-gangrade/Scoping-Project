@@ -8,6 +8,8 @@ export class ProjectTeamsContainer extends Component {
     constructor(props) {
         super(props);
 
+        console.log(this.props.cookies.get('authorizationToken'));
+
         this.state = {
             projectTeamsList: []
         };

@@ -8,7 +8,7 @@ export class Layout extends Component {
   render () {
     return (
       <div>
-        <NavMenu user={this.props.user} setUser={this.props.setUser}/>
+        <NavMenu user={this.props.user} setUser={this.props.setUser} cookies={this.props.cookies}/>
         <Container>
           {this.props.children}
         </Container>
