@@ -56,6 +56,42 @@ var authMiddleware = function (req, res, next) {
 }
 
 
+// admin login
+app.post('/v1/admin/login', function (req, res) {
+    if (typeof req.body.email === "undefined" || typeof req.body.password === "undefined") {
+        res.status(BAD_REQUEST).send("Bad request Check request Body");
+    } else {
+        client = new MongoClient(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
+        client.connect().then(() => {
+            var myObj = {
+                emailId: req.body.email,
+            };
+            client.db('Scoping').collection('Admin').findOne(myObj, function (err, result) {
+                //console.log(result._id);
+                if (err)
+                    res.status(INTERNAL_SERVER_ERROR).send(err);
+                else if (result == null)
+                    res.status(OK).send("No such user found");
+                else if (result != null && bcrypt.compareSync(req.body.password, result.password)) {
+                    var token = jwt.sign({
+                        u_id: result._id,
+                    }, 'secret', {
+                        expiresIn: 60 * 60
+                    });
+                    res.header("AuthorizationKey", token).status(OK).send("Login Successful");
+                }
+                else {
+                    res.status(OK).send("Invalid Credentials");
+                }
+                return client.close();
+            })
+        });
+    }
+});
+
 // login
 app.post('/v1/examiner/login', function (req, res) {
     if (typeof req.body.email === "undefined" || typeof req.body.password === "undefined") {
@@ -165,7 +201,7 @@ app.post('/v1/admin/login', function (req, res) {
 
 
 // generate QR code for Examiner
-app.post('/v1/qr/examiner', function (req, res) {
+app.post('/v1/qr/examiner', authMiddleware, function (req, res) {
     if (typeof req.body.email === "undefined") {
         res.status(BAD_REQUEST).send("Bad request Check request Body");
     } else {
@@ -211,7 +247,7 @@ app.post('/v1/qr/examiner', function (req, res) {
 
 
 //Create Examiner With Passed Information (POST)
-app.post('/v1/examiner/create', (req, res) => {
+app.post('/v1/examiner/create', authMiddleware, (req, res) => {
     if (typeof req.body.firstname === "undefined" || typeof req.body.lastname === "undefined" || typeof req.body.age === "undefined" ||
       typeof req.body.address === "undefined" || typeof req.body.email === "undefined") {
       res.status(BAD_REQUEST).send("Bad request Check parameters or Body");
@@ -243,7 +279,7 @@ app.post('/v1/examiner/create', (req, res) => {
 });
 
 //Delete Examiner (DELETE)
-app.delete('/v1/examiner/delete', (req, res) => {
+app.delete('/v1/examiner/delete', authMiddleware, (req, res) => {
     console.log("delete examiner: " + req.encode);
     client = new MongoClient(url, {
       useNewUrlParser: true,
@@ -267,7 +303,7 @@ app.delete('/v1/examiner/delete', (req, res) => {
   });
 
 //Retrive All Examiners Information (GET)
-app.get('/v1/examiner/get-all', function(req, res) {
+app.get('/v1/examiner/get-all', authMiddleware, function(req, res) {
     console.log("get-all: " + req.encode);
     client = new MongoClient(url, {
       useNewUrlParser: true,
