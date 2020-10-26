@@ -17,9 +17,17 @@ class App extends Component {
 
         this.state = {
             user: null,
+            token: this.props.cookies.get('authorizationToken')
+
         }
 
         this.setUser = this.setUser.bind(this);
+        this.checkValidToken = this.checkValidToken.bind(this);
+    }
+
+    async componentDidMount(){
+      let token = this.props.cookies.get('authorizationToken')
+      await this.checkValidToken(token)
     }
 
   setUser(user, token) {
@@ -35,21 +43,41 @@ class App extends Component {
   }
 
   //Implement later 
-  checkValidToken(token){
+  async checkValidToken(token){
+    let response = await fetch('/v1/token/check', {
+      method: 'GET',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'AuthorizationKey': token
+      },
+    });
 
+    const data = await response.text();
+    console.log(data);
+
+    if(data === "Token is valid"){
+
+    }
+    else{
+      this.setUser(null,null)
+    }
+   
   }
 
   render () {
-    const token = this.props.cookies.get('authorizationToken');
     console.log(this.props.cookies.get('authorizationToken'));
+    let token = this.props.cookies.get('authorizationToken')
 
     return (
         <Layout user={this.state.user} setUser={this.setUser} cookies={this.props.cookies}>
-           {token !== undefined ? <Redirect to="/profile"/> : <Route path='/login' render={(props) => <LoginContainer setUser={this.setUser}/>} />}
-           {token === undefined ? <Redirect to="/login"/> : <Route path='/profile' render={(props) => <Profile user={this.state.user}/>} cookies={this.props.cookies}/>}
-           {token === undefined ? <Redirect to="/login"/> : <Route path='/examiners' render={(props) => <ExaminersContainer user={this.state.user} cookies={this.props.cookies}/>} />}
-           {token === undefined ? <Redirect to="/login"/> : <Route path='/project-teams' render={(props) => <ProjectTeamsContainer user={this.state.user} cookies={this.props.cookies}/>} />}
-        </Layout>
+           {token !== undefined ? <Redirect to="/home"/> : <Route path='/login' render={(props) => <LoginContainer setUser={this.setUser}/>} />}
+           <Route path='/home' render={(props) => <Profile user={this.state.user}/>}/>
+
+           {/* {token === undefined ? <Redirect to="/login"/> : <Route path='/profile' render={(props) => <Profile user={this.state.user}/>} cookies={this.props.cookies}/>} */}
+           {token === undefined ? <Redirect to="/login"/> : <Route path='/examiners' render={(props) => <ExaminersContainer user={this.state.user} cookies={this.props.cookies} checkValidToken={this.checkValidToken}/>} />}
+           {token === undefined ? <Redirect to="/login"/> : <Route path='/project-teams' render={(props) => <ProjectTeamsContainer user={this.state.user} cookies={this.props.cookies} checkValidToken={this.checkValidToken}/>} />}
+         </Layout>
     );
   }
 }

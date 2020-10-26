@@ -24,7 +24,9 @@ export class ExaminersContainer extends Component {
             email: "",
             age: 1,
             address: "",
-            authToken: this.props.cookies.get('authorizationToken')
+            authToken: this.props.cookies.get('authorizationToken'),
+            currentExaminerQR: ""
+
         };
 
         this.handleCreateClick = this.handleCreateClick.bind(this);
@@ -32,17 +34,21 @@ export class ExaminersContainer extends Component {
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.handleQRCodeClick = this.handleQRCodeClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleCloseQRCode = this.handleCloseQRCode.bind(this);
         this.populateExaminersTable = this.populateExaminersTable.bind(this);
 
     }
 
-    componentDidMount(){
+    async componentDidMount(){
+        await this.props.checkValidToken(this.state.authToken);
+
         this.populateExaminersTable();
     }
 
     async populateExaminersTable(){
         let examinersList = [];
-        
+
+
         let response = await fetch('/v1/examiner/get-all', {
             method: 'GET',
             headers: {
@@ -117,7 +123,8 @@ export class ExaminersContainer extends Component {
 
         this.setState({
             qrcodeStr: urlData,
-            showQRCode: true
+            showQRCode: true,
+            currentExaminerQR: generateExaminer.firstname + " " + generateExaminer.lastname
         })
 
     }
@@ -169,14 +176,19 @@ export class ExaminersContainer extends Component {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
+                'AuthorizationKey': this.state.authToken
             },
             body: JSON.stringify(deleteExaminer)
         });
 
-        this.setState({
-            examinersList: newExaminerList
-        })
+        this.populateExaminersTable();
 
+    }
+
+    handleCloseQRCode(){
+        this.setState({
+            showQRCode: false
+        })
     }
 
   
@@ -187,8 +199,10 @@ export class ExaminersContainer extends Component {
                     toggleForm={this.state.toggleForm} 
                     onDeleteClick={this.handleDeleteClick} 
                     examinersList={this.state.examinersList} 
+                    currentExaminerQR={this.state.currentExaminerQR}
                     onCreateClick={this.handleCreateClick} 
                     onSubmitClick={this.handleSubmitClick} 
+                    onCloseQRClick={this.handleCloseQRCode}
                     onQRCodeClick={this.handleQRCodeClick}
                     onChange={this.handleChange} 
                     showQRCode={this.state.showQRCode}

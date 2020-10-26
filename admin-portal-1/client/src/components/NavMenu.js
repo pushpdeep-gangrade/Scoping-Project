@@ -40,7 +40,7 @@ export class NavMenu extends Component {
       </NavItem>);
 
       var profile = (<NavItem>
-          <NavLink tag={Link} className="text-dark" to="/profile">Profile</NavLink>
+          <NavLink tag={Link} className="text-dark" to="/home">Home</NavLink>
       </NavItem>);
 
       if (this.props.cookies.get('authorizationToken') !== undefined) {
@@ -58,7 +58,8 @@ export class NavMenu extends Component {
             <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
               <ul className="navbar-nav flex-grow">
-                { usertf === false ? true : profile }          
+                {/* { usertf === false ? true : profile }           */}
+                { profile }
                 { usertf === false ? true : examiners }
                 { usertf === false ? true : teams }
                 { log }

@@ -510,6 +510,10 @@ app.post('/v1/teams/update/scores', authMiddleware, function (req, res) {
     }
 })
 
+app.get('/v1/token/check', authMiddleware, function(req, res){
+    res.status(OK).send("Token is valid");
+})
+
 http.createServer(app).listen(port, function (){
     console.log("Listening on port " + port);
 })
