@@ -44,6 +44,8 @@ var authMiddleware = function (req, res, next) {
                 } else {
                     if (decoded.u_id == decode.u_id) {
                         req.encode = decoded.u_id;
+                        req.encode_first = decode.u_first;
+                        req.encode_last = decode.u_last;
                         next();
                     } else
                         console.log("fail");
@@ -78,6 +80,8 @@ app.post('/v1/admin/login', function (req, res) {
                 else if (result != null && req.body.password === result.password) {
                     var token = jwt.sign({
                         u_id: result._id,
+                        u_first: result.emailId,
+                        u_last: "",
                     }, 'secret', {
                         expiresIn: 60 * 60
                     });
@@ -128,7 +132,7 @@ app.post('/v1/admin/login', function (req, res) {
     }
 }); */
 
-// login
+// login no nycrpyt
 app.post('/v1/examiner/login', function (req, res) {
     if (typeof req.body.email === "undefined" || typeof req.body.password === "undefined") {
         res.status(BAD_REQUEST).send("Bad request Check request Body");
@@ -139,7 +143,7 @@ app.post('/v1/examiner/login', function (req, res) {
         });
         client.connect().then(() => {
             var myObj = {
-                emailId: req.body.email,
+                email: req.body.email,
             };
             client.db('Scoping').collection('Examiner').findOne(myObj, function (err, result) {
                 //console.log(result._id);
@@ -147,9 +151,11 @@ app.post('/v1/examiner/login', function (req, res) {
                     res.status(INTERNAL_SERVER_ERROR).send(err);
                 else if (result == null)
                     res.status(OK).send("No such user found");
-                else if (result != null && bcrypt.compareSync(req.body.password, result.password)) {
+                else if (result != null && req.body.password === result.password) {
                     var token = jwt.sign({
                         u_id: result._id,
+                        u_first: result.firstname,
+                        u_last: result.lastname,
                     }, 'secret', {
                         expiresIn: 60 * 60
                     });
@@ -163,6 +169,46 @@ app.post('/v1/examiner/login', function (req, res) {
         });
     }
 });
+
+// login bycrypt
+/*
+app.post('/v1/examiner/login', function (req, res) {
+    if (typeof req.body.email === "undefined" || typeof req.body.password === "undefined") {
+        res.status(BAD_REQUEST).send("Bad request Check request Body");
+    } else {
+        client = new MongoClient(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
+        client.connect().then(() => {
+            var myObj = {
+                email: req.body.email,
+            };
+            client.db('Scoping').collection('Examiner').findOne(myObj, function (err, result) {
+                //console.log(result._id);
+                if (err)
+                    res.status(INTERNAL_SERVER_ERROR).send(err);
+                else if (result == null)
+                    res.status(OK).send("No such user found");
+                else if (result != null && bcrypt.compareSync(req.body.password, result.password)) {
+                    var token = jwt.sign({
+                        u_id: result._id,
+                        u_first: result.firstname,
+                        u_last: result.lastname,
+                    }, 'secret', {
+                        expiresIn: 60 * 60
+                    });
+                    res.header("AuthorizationKey", token).status(OK).send("Login Successful");
+                }
+                else {
+                    res.status(OK).send("Invalid Credentials");
+                }
+                return client.close();
+            })
+        });
+    }
+});
+*/
 
 
 // QR login
@@ -185,6 +231,8 @@ app.post('/v1/examiner/login/qr', authMiddleware, function (req, res) {
                 else if (result != null ) {
                     var token = jwt.sign({
                         u_id: result._id,
+                        u_first: result.firstname,
+                        u_last: result.lastname,
                     }, 'secret', {
                         expiresIn: 60 * 60
                     });
@@ -389,6 +437,78 @@ app.get('/v1/teams', authMiddleware, function (req, res) {
     });
 });
 
+// Add/Update examiner score for a team
+app.post('/v1/teams/update/scores', authMiddleware, function (req, res) {
+    if (typeof req.body.teamname === "undefined" || typeof req.body.score === "undefined") {
+      res.status(BAD_REQUEST).send("Bad request Check parameters or Body");
+    } else {
+        //console.log("update score: " + req.encode + " | " + req.encode_first + " " + req.encode_last);
+        client = new MongoClient(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
+        client.connect().then(() => {
+
+            //Check if item is in cart already
+            client.db('Scoping').collection('Team').findOne({
+                name: req.body.teamname,
+                "scores.examinerName": req.encode_first + " " + req.encode_last,
+            }).then(result => {
+                if (result != null) {
+                    //console.log(result);
+                    //If Examiner has already scored this team
+                    var myquery = {
+                        name: req.body.teamname,
+                        "scores.examinerName": req.encode_first + " " + req.encode_last,
+                    };
+                    var newvalues = {
+                        $set: {
+                            "scores.$.examinerName": req.encode_first + " " + req.encode_last,
+                            "scores.$.score": parseInt(req.body.score)
+                        }
+                    };
+
+                    client.db('Scoping').collection('Team').updateOne(myquery, newvalues, {
+                        upsert: true
+                    }, function(err, result) {
+                        //console.log(result)
+                        if (err) {
+                        res.status(INTERNAL_SERVER_ERROR).send(err);
+                        } else {
+                        res.status(OK).send("Record Updated");
+                        }
+                        return client.close();
+                    })
+                } else {
+                    //console.log(result);
+                    //Else Examiner has not already scored this team
+                    var myquery = {
+                        name: req.body.teamname,
+                    };
+                    var newvalues = {
+                      $addToSet: {
+                        scores: {
+                            examinerName: req.encode_first + " " + req.encode_last,
+                            score: parseInt(req.body.score)
+                        }
+                      }
+                    };
+          
+                    client.db('Scoping').collection('Team').updateOne(myquery, newvalues, {
+                      upsert: true
+                    }, function(err, result) {
+                      if (err)
+                        res.status(INTERNAL_SERVER_ERROR).send(err);
+                      else {
+                        res.status(OK).send("Record Added");
+                      }
+                      return client.close();
+                    })
+                  }
+            })
+        });
+    }
+})
 
 http.createServer(app).listen(port, function (){
     console.log("Listening on port " + port);
