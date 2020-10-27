@@ -86,22 +86,32 @@ public class Login extends Fragment {
                 call.enqueue(new Callback<Examiner>() {
                     @Override
                     public void onResponse(Call<Examiner> call, Response<Examiner> response) {
-                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(AuthExaminer, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString(getString(R.string.auth), response.headers().get("AuthorizationKey"));
-                        editor.apply();
-
                         Log.d("demo", response.toString());
-                        Examiner e1 = response.body();
+                        if(response.code() == 200) {
+                            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(AuthExaminer, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString(getString(R.string.auth), response.headers().get("AuthorizationKey"));
+                            editor.apply();
 
-                        Toast.makeText(getContext(), "Welcome " + e1.getFirstname(), Toast.LENGTH_SHORT).show();
-                        Navigation.findNavController(getView()).navigate(R.id.action_login_to_scoreboard);
+                            Log.d("demo", response.toString());
+                            Examiner e1 = response.body();
+
+                            Toast.makeText(getContext(), "Welcome " + e1.getFirstname(), Toast.LENGTH_SHORT).show();
+                            Navigation.findNavController(getView()).navigate(R.id.action_login_to_scoreboard);
+                        }
+                    else if(response.code() == 401){
+                            Toast.makeText(getContext(), response.message() , Toast.LENGTH_SHORT).show();
+                        }
+                    else if(response.code() == 400) {
+                            Toast.makeText(getContext(), "Token expired", Toast.LENGTH_SHORT).show();
+                        }  else
+                            Toast.makeText(getContext(), "Invalid QR", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(Call<Examiner> call, Throwable t) {
                         Log.d("demo", t.toString());
-                        Toast.makeText(getContext(), "Something went wrong...Please try later!" + t, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Server is Down", Toast.LENGTH_SHORT).show();
                     }
                 });
 

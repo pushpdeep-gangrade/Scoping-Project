@@ -11,11 +11,14 @@ public class RetrofitClientInstance {
     private static Retrofit retrofit;
     private static final String BASE_URL = "http://104.248.113.55:5000";
 
+
+    private static Gson gson = new GsonBuilder().setLenient().create();
+
     public static Retrofit getRetrofitInstance() {
         if (retrofit == null) {
             retrofit = new retrofit2.Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }
         return retrofit;

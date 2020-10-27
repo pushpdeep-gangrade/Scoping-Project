@@ -16,6 +16,7 @@
 
 
     <string name="qr_login">Scan QR to Login</string>
+    <string name="qr_team">Scan QR to evaluate Team</string>
     <string name="auth">Auth toekn</string>
 
     <string name="poor">Poor</string>

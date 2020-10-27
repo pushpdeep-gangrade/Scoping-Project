@@ -27,6 +27,7 @@ import com.example.scopping.databinding.FragmentScoreboardBinding;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -93,26 +94,30 @@ public class Scoreboard extends Fragment {
                     ArrayList<Score> score = teams.get(i).getScores();
                     double totalScore = 0.0;
                     for (int j = 0; j < score.size(); j++) {
-
                         totalScore += score.get(j).getScore();
-
                     }
-
                     Scores s = new Scores(teams.get(i).getName(), totalScore/score.size());
                     scoresList.add(s);
-
                 }
 
                 Collections.sort(scoresList, new Comparator<Scores>() {
                     @Override
                     public int compare(Scores scores, Scores t1) {
-                        return (int) (t1.getScore() - scores.getScore());
+                        return (int) (scores.getScore() - t1.getScore());
                     }
                 });
+
+                for(int i=0;i< scoresList.size();i++){
+                    Log.d("demo", scoresList.get(i).getTeamname() + " " + scoresList.get(i).getScore() );
+                }
+
                 Collections.reverse(scoresList);
+
+                for(int i=0;i< scoresList.size();i++){
+                    Log.d("demo", "after " + scoresList.get(i).getTeamname() + " " + scoresList.get(i).getScore() );
+                }
                 scoreboardAdapter = new ScoreboardAdapter(scoresList);
                 scoreborad.setAdapter(scoreboardAdapter);
-                // Set layout manager to position the items
                 scoreborad.setLayoutManager(new LinearLayoutManager(getContext()));
             }
 
@@ -126,19 +131,11 @@ public class Scoreboard extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        Bundle bundle = new Bundle();
-//        //  bundle.putString("teamid", response.body());
-//        bundle.putString("teamid", "5f8f2ded82ab5212fc6e307c");
-
-        //Navigation.findNavController(getView()).navigate(R.id.action_scoreboard_to_fragment1, bundle);
-
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
         if (result != null) {
-
             if (result.getContents() == null) {
                 Toast.makeText(getContext(), "Result Not Found", Toast.LENGTH_LONG).show();
-
             } else {
                 Log.d("demo", "result " + result.getContents());
 
@@ -148,20 +145,25 @@ public class Scoreboard extends Fragment {
                 String authToken = sharedPreferences.getString(getString(R.string.auth), "");
 
                 Map<String, String> map = new HashMap<>();
-
                 map.put("authorizationkey", authToken);
                 map.put("teamId", result.getContents());
                 Call<String> call = service.getTeam(map);
+
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        Log.d("demo", response.toString());
-                        Log.d("demo", response.body().toString());
-                        Bundle bundle = new Bundle();
-                        // bundle.putString("teamid", response.body());
-                       // bundle.putString("teamid", "5f8f2ded82ab5212fc6e307c");
-                        Navigation.findNavController(getView()).navigate(R.id.action_login_to_scoreboard, bundle);
-
+                        if(response.code() == 200) {
+                            Log.d("demo", response.toString());
+                            Log.d("demo", response.body().toString());
+                            Bundle bundle = new Bundle();
+                            bundle.putString("teamid", response.body());
+                            Navigation.findNavController(getView()).navigate(R.id.action_scoreboard_to_fragment1, bundle);
+                        }
+                        else if(response.code() == 400){
+                            Toast.makeText(getContext(), "Token expired" , Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                            Toast.makeText(getContext(), "Invalid QR", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

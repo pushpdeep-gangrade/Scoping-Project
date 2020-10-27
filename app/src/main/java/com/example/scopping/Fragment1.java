@@ -59,13 +59,13 @@ public class Fragment1 extends Fragment {
 
         binding.question.setText(questions.get(0));
 
-
         if (index == 0)
             binding.btnPrev.setVisibility(View.INVISIBLE);
 
         binding.btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                binding.radioGroup.clearCheck();
                 if (index < questions.size() - 1) {
                     index++;
                     binding.btnPrev.setVisibility(View.VISIBLE);

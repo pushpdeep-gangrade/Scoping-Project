@@ -13,6 +13,7 @@ import com.example.model.Score;
 import com.example.model.Scores;
 import com.example.scopping.R;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +46,9 @@ public class ScoreboardAdapter extends RecyclerView.Adapter<ScoreboardAdapter.My
         int rank = count++;
         holder.id.setText(Integer.toString(rank));
         holder.name.setText(t.getTeamname());
-        holder.score.setText(Double.toString(t.getScore()));
+        DecimalFormat df = new DecimalFormat("#.##");
+
+        holder.score.setText(df.format(t.getScore()));
     }
 
     @Override

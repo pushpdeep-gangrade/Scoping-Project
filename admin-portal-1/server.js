@@ -16,7 +16,7 @@ var bodyParser = require('body-parser');
 const { log } = require('console');
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
-  extended: true
+    extended: true
 }));
 app.use(express.json());
 
@@ -40,6 +40,7 @@ var authMiddleware = function (req, res, next) {
             var decode = jwt.decode(req.headers.authorizationkey);
             jwt.verify(req.headers.authorizationkey, 'secret', function (err, decoded) {
                 if (err) {
+                    console.log(err);
                     res.status(BAD_REQUEST).send(err.message);
                 } else {
                     if (decoded.u_id == decode.u_id) {
@@ -58,7 +59,7 @@ var authMiddleware = function (req, res, next) {
 }
 
 var authTeams = function (req, res, next) {
-   // console.log(req.headers);
+    // console.log(req.headers);
     try {
         if (!req.headers.teamid) {
             res.status(UNAUTHORIZED).send("UNAUTHORIZED");
@@ -171,7 +172,7 @@ app.post('/v1/examiner/login', function (req, res) {
                 email: req.body.email,
             };
             client.db('Scoping').collection('Examiner').findOne(myObj, function (err, result) {
-                console.log(result+"result");
+                console.log(result + "result");
                 if (err)
                     res.status(INTERNAL_SERVER_ERROR).send(err);
                 else if (result == null)
@@ -239,36 +240,36 @@ app.post('/v1/examiner/login', function (req, res) {
 // QR login
 app.post('/v1/examiner/login/qr', authMiddleware, function (req, res) {
     var o_id = new ObjectId(req.encode);
-        client = new MongoClient(url, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
-        client.connect().then(() => {
-            var myObj = {
-                _id: o_id,
-            };
-            client.db('Scoping').collection('Examiner').findOne(myObj, function (err, result) {
-                console.log(result._id);
-                if (err)
-                    res.status(INTERNAL_SERVER_ERROR).send(err);
-                else if (result == null)
-                    res.status(OK).send("No such user found");
-                else if (result != null ) {
-                    var token = jwt.sign({
-                        u_id: result._id,
-                        u_first: result.firstname,
-                        u_last: result.lastname,
-                    }, 'secret', {
-                        expiresIn: 60 * 60
-                    });
-                    res.header("AuthorizationKey", token).status(OK).send(result);
-                }
-                else {
-                    res.status(OK).send("Invalid Credentials");
-                }
-                return client.close();
-            })
-        });
+    client = new MongoClient(url, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+
+    client.connect().then(() => {
+        var myObj = {
+            _id: o_id,
+        };
+        client.db('Scoping').collection('Examiner').findOne(myObj, function (err, result) {
+            if (err)
+                res.status(INTERNAL_SERVER_ERROR).send(err);
+            else if (result == null)
+                res.status(OK).send("No such user found");
+            else if (result != null) {
+                var token = jwt.sign({
+                    u_id: result._id,
+                    u_first: result.firstname,
+                    u_last: result.lastname,
+                }, 'secret', {
+                    expiresIn: 60 * 60
+                });
+                res.header("AuthorizationKey", token).status(OK).send(result);
+            }
+            else {
+                res.status(OK).send("Invalid Credentials");
+            }
+            return client.close();
+        })
+    });
 });
 
 
@@ -304,11 +305,11 @@ app.post('/v1/qr/examiner', authMiddleware, function (req, res) {
                         type: 'terminal',
                         w: 10,
                         h: 10
-                    } , function (err, url) {
+                    }, function (err, url) {
                         res.header("AuthorizationKey", token).status(OK).send(url);
                         console.log(url)
                     })
-                    
+
                 }
                 else {
                     res.status(OK).send("Invalid Credentials");
@@ -325,29 +326,29 @@ app.post('/v1/qr/examiner', authMiddleware, function (req, res) {
 //Create Examiner With Passed Information (POST)
 app.post('/v1/examiner/create', authMiddleware, (req, res) => {
     if (typeof req.body.firstname === "undefined" || typeof req.body.lastname === "undefined" || typeof req.body.age === "undefined" ||
-      typeof req.body.address === "undefined" || typeof req.body.email === "undefined") {
-      res.status(BAD_REQUEST).send("Bad request Check parameters or Body");
+        typeof req.body.address === "undefined" || typeof req.body.email === "undefined") {
+        res.status(BAD_REQUEST).send("Bad request Check parameters or Body");
     } else {
         client = new MongoClient(url, {
-          useNewUrlParser: true,
-          useUnifiedTopology: true
+            useNewUrlParser: true,
+            useUnifiedTopology: true
         });
         client.connect().then(() => {
             var myobj = {
-            firstname: req.body.firstname,
-            lastname: req.body.lastname,
-            age: req.body.age,
-            address: req.body.address,
-            email: req.body.email,
-            qrcode: "BLANK"
-          };
-          client.db('Scoping').collection('Examiner').insertOne(myobj, function(err, result) {
-            if (err)
-                res.status(INTERNAL_SERVER_ERROR).send(err);
-            else if (result.insertedCount == 1) {
-                res.status(OK).send("Signed up Successfully");
-                console.log(result.insertedId);
-            }
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
+                age: req.body.age,
+                address: req.body.address,
+                email: req.body.email,
+                qrcode: "BLANK"
+            };
+            client.db('Scoping').collection('Examiner').insertOne(myobj, function (err, result) {
+                if (err)
+                    res.status(INTERNAL_SERVER_ERROR).send(err);
+                else if (result.insertedCount == 1) {
+                    res.status(OK).send("Signed up Successfully");
+                    console.log(result.insertedId);
+                }
                 return client.close();
             })
         });
@@ -358,35 +359,35 @@ app.post('/v1/examiner/create', authMiddleware, (req, res) => {
 app.delete('/v1/examiner/delete', authMiddleware, (req, res) => {
     console.log("delete examiner: " + req.encode);
     client = new MongoClient(url, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
+        useNewUrlParser: true,
+        useUnifiedTopology: true
     });
     client.connect().then(() => {
-      //Delete examiner
-      client.db('Scoping').collection('Examiner').deleteOne({
-        firstname: req.body.firstname,
-        lastname: req.body.lastname
-      }, (err, result) => {
-          if (err) {
-              console.log(err);
-          }
-          else {
-              //console.log(result);
-              res.status(OK).send("Deleted " + result.deletedCount + " examiners.");
-          }
-      });
+        //Delete examiner
+        client.db('Scoping').collection('Examiner').deleteOne({
+            firstname: req.body.firstname,
+            lastname: req.body.lastname
+        }, (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                //console.log(result);
+                res.status(OK).send("Deleted " + result.deletedCount + " examiners.");
+            }
+        });
     });
-  });
+});
 
 //Retrive All Examiners Information (GET)
-app.get('/v1/examiner/get-all', authMiddleware, function(req, res) {
+app.get('/v1/examiner/get-all', authMiddleware, function (req, res) {
     console.log("get-all: " + req.encode);
     client = new MongoClient(url, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
+        useNewUrlParser: true,
+        useUnifiedTopology: true
     });
     client.connect().then(() => {
-        client.db('Scoping').collection('Examiner').find({}).toArray(function(err, result) {
+        client.db('Scoping').collection('Examiner').find({}).toArray(function (err, result) {
             if (err) {
                 console.log(err);
             }
@@ -421,7 +422,7 @@ app.get('/v1/examiner', authMiddleware, function (req, res) {
 
 // Create teams
 app.post('/v1/teams', authMiddleware, function (req, res) {
-   // console.log("create teams: " + req.encode);
+    // console.log("create teams: " + req.encode);
     client = new MongoClient(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true
@@ -464,7 +465,6 @@ app.get('/v1/teams', authMiddleware, function (req, res) {
 
 // QR team
 app.get('/v1/teams/qr', authMiddleware, authTeams, function (req, res) {
-    console.log("Check");
     var o_id = new ObjectId(req.encode_teamId);
     client = new MongoClient(url, {
         useNewUrlParser: true,
@@ -475,11 +475,10 @@ app.get('/v1/teams/qr', authMiddleware, authTeams, function (req, res) {
             _id: o_id,
         };
         client.db('Scoping').collection('Team').findOne(myObj, function (err, result) {
-            console.log(result._id);
             if (err)
                 res.status(INTERNAL_SERVER_ERROR).send(err);
             else if (result == null)
-                res.status(OK).send("No such team found");
+                res.status(NOT_FOUND).send("No such team found");
             else if (result != null) {
                 res.status(OK).send(req.encode_teamId);
             }
@@ -493,9 +492,9 @@ app.get('/v1/teams/qr', authMiddleware, authTeams, function (req, res) {
 
 // Add/Update examiner score for a team
 app.post('/v1/teams/update/scores', authMiddleware, function (req, res) {
-   
+
     if (typeof req.body.teamname === "undefined" || typeof req.body.score === "undefined") {
-      res.status(BAD_REQUEST).send("Bad request Check parameters or Body");
+        res.status(BAD_REQUEST).send("Bad request Check parameters or Body");
     } else {
         var o_id = new ObjectId(req.body.teamname);
         //console.log("update score: " + req.encode + " | " + req.encode_first + " " + req.encode_last);
@@ -526,12 +525,12 @@ app.post('/v1/teams/update/scores', authMiddleware, function (req, res) {
 
                     client.db('Scoping').collection('Team').updateOne(myquery, newvalues, {
                         upsert: true
-                    }, function(err, result) {
+                    }, function (err, result) {
                         //console.log(result)
                         if (err) {
-                        res.status(INTERNAL_SERVER_ERROR).send(err);
+                            res.status(INTERNAL_SERVER_ERROR).send(err);
                         } else {
-                        res.status(OK).send("Record Updated");
+                            res.status(OK).send("Record Updated");
                         }
                         return client.close();
                     })
@@ -542,34 +541,34 @@ app.post('/v1/teams/update/scores', authMiddleware, function (req, res) {
                         _id: o_id,
                     };
                     var newvalues = {
-                      $addToSet: {
-                        scores: {
-                            examinerName: req.encode_first + " " + req.encode_last,
-                            score: parseInt(req.body.score)
+                        $addToSet: {
+                            scores: {
+                                examinerName: req.encode_first + " " + req.encode_last,
+                                score: parseInt(req.body.score)
+                            }
                         }
-                      }
                     };
-          
+
                     client.db('Scoping').collection('Team').updateOne(myquery, newvalues, {
-                      upsert: true
-                    }, function(err, result) {
-                      if (err)
-                        res.status(INTERNAL_SERVER_ERROR).send(err);
-                      else {
-                        res.status(OK).send("Record Added");
-                      }
-                      return client.close();
+                        upsert: true
+                    }, function (err, result) {
+                        if (err)
+                            res.status(INTERNAL_SERVER_ERROR).send(err);
+                        else {
+                            res.status(OK).send("Record Added");
+                        }
+                        return client.close();
                     })
-                  }
+                }
             })
         });
     }
 })
 
-app.get('/v1/token/check', authMiddleware, function(req, res){
+app.get('/v1/token/check', authMiddleware, function (req, res) {
     res.status(OK).send("Token is valid");
 })
 
-http.createServer(app).listen(port, function (){
+http.createServer(app).listen(port, function () {
     console.log("Listening on port " + port);
 })
