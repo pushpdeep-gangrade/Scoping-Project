@@ -57,6 +57,31 @@ var authMiddleware = function (req, res, next) {
     }
 }
 
+var authTeams = function (req, res, next) {
+   // console.log(req.headers);
+    try {
+        if (!req.headers.teamid) {
+            res.status(UNAUTHORIZED).send("UNAUTHORIZED");
+        } else {
+            var decode = jwt.decode(req.headers.teamid);
+            jwt.verify(req.headers.teamid, 'secret', function (err, decoded) {
+                if (err) {
+                    res.status(BAD_REQUEST).send(err.message);
+                } else {
+                    console.log(decoded)
+                    if (decoded.u_id == decode.u_id) {
+                        req.encode_teamId = decoded.u_id;
+                        next();
+                    } else
+                        console.log("fail");
+                }
+            });
+        }
+    } catch (err) {
+        res.send(err);
+    }
+}
+
 
 // admin login without password encyption check
 app.post('/v1/admin/login', function (req, res) {
@@ -146,7 +171,7 @@ app.post('/v1/examiner/login', function (req, res) {
                 email: req.body.email,
             };
             client.db('Scoping').collection('Examiner').findOne(myObj, function (err, result) {
-                //console.log(result._id);
+                console.log(result+"result");
                 if (err)
                     res.status(INTERNAL_SERVER_ERROR).send(err);
                 else if (result == null)
@@ -437,11 +462,42 @@ app.get('/v1/teams', authMiddleware, function (req, res) {
     });
 });
 
+// QR team
+app.get('/v1/teams/qr', authMiddleware, authTeams, function (req, res) {
+    console.log("Check");
+    var o_id = new ObjectId(req.encode_teamId);
+    client = new MongoClient(url, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+    client.connect().then(() => {
+        var myObj = {
+            _id: o_id,
+        };
+        client.db('Scoping').collection('Team').findOne(myObj, function (err, result) {
+            console.log(result._id);
+            if (err)
+                res.status(INTERNAL_SERVER_ERROR).send(err);
+            else if (result == null)
+                res.status(OK).send("No such team found");
+            else if (result != null) {
+                res.status(OK).send(req.encode_teamId);
+            }
+            else {
+                res.status(OK).send("Invalid Credentials");
+            }
+            return client.close();
+        })
+    });
+});
+
 // Add/Update examiner score for a team
 app.post('/v1/teams/update/scores', authMiddleware, function (req, res) {
+   
     if (typeof req.body.teamname === "undefined" || typeof req.body.score === "undefined") {
       res.status(BAD_REQUEST).send("Bad request Check parameters or Body");
     } else {
+        var o_id = new ObjectId(req.body.teamname);
         //console.log("update score: " + req.encode + " | " + req.encode_first + " " + req.encode_last);
         client = new MongoClient(url, {
             useNewUrlParser: true,
@@ -451,14 +507,14 @@ app.post('/v1/teams/update/scores', authMiddleware, function (req, res) {
 
             //Check if item is in cart already
             client.db('Scoping').collection('Team').findOne({
-                name: req.body.teamname,
+                _id: o_id,
                 "scores.examinerName": req.encode_first + " " + req.encode_last,
             }).then(result => {
                 if (result != null) {
                     //console.log(result);
                     //If Examiner has already scored this team
                     var myquery = {
-                        name: req.body.teamname,
+                        _id: o_id,
                         "scores.examinerName": req.encode_first + " " + req.encode_last,
                     };
                     var newvalues = {
@@ -483,7 +539,7 @@ app.post('/v1/teams/update/scores', authMiddleware, function (req, res) {
                     //console.log(result);
                     //Else Examiner has not already scored this team
                     var myquery = {
-                        name: req.body.teamname,
+                        _id: o_id,
                     };
                     var newvalues = {
                       $addToSet: {

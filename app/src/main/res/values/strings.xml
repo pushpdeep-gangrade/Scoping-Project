@@ -9,18 +9,34 @@
     <string name="login">Login</string>
     <string name="next">Next</string>
     <string name="prev">Prev</string>
-    <string name="no_evidence">No Evidence</string>
-    <string name="superior">Superior</string>
+    <string name="submit">Submit</string>
+    <string name="no_evidence">bmit</string>
+    <string name="score">score</string>
+
+
+
     <string name="qr_login">Scan QR to Login</string>
+    <string name="auth">Auth toekn</string>
+
+    <string name="poor">Poor</string>
+    <string name="fair">Fair</string>
+    <string name="good">Good</string>
+    <string name="very_good">Very Good</string>
+    <string name="superior">Superior</string>
 
 
-    <string name="q1">1. Poster content is of professional quality and indicates a mastery of the project subject matter.</string>
-    <string name="q2">2. The presentation is organized, engaging, and includes a thorough description of the design and the implementation of the design.</string>
-    <string name="q3">3. All the team members are suitably attired, are polite, demonstrate full knowledge of material, and can answer all relevant questions.</string>
-    <string name="q4">4. The work product (model,rototype, documentation, set or computer simulation) is of professional quality in all respects.</string>
-    <string name="q5">5. The team implemented novel approaches and/or solutions in the development of the project.</string>
-    <string name="q6">6. The project has the potential to enhance the reputation of the Inovative Computing Project and/or CCI/DSI. </string>
-    <string name="q7">7. The team successfully explained the scope and results of their project in no more than 5 minutes.</string>
 
+
+
+
+    <string-array name="questionsArray">
+        <item>1. Poster content is of professional quality and indicates a mastery of the project subject matter.</item>
+        <item>2. The presentation is organized, engaging, and includes a thorough description of the design and the implementation of the design.</item>
+        <item>3. All the team members are suitably attired, are polite, demonstrate full knowledge of material, and can answer all relevant questions.</item>
+        <item>4. The work product (model,rototype, documentation, set or computer simulation) is of professional quality in all respects.</item>
+        <item>5. The team implemented novel approaches and/or solutions in the development of the project.</item>
+        <item>6. The project has the potential to enhance the reputation of the Inovative Computing Project and/or CCI/DSI. </item>
+        <item>7. The team successfully explained the scope and results of their project in no more than 5 minutes.</item>
+    </string-array>
 
 </resources>
