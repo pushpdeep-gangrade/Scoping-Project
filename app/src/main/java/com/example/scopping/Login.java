@@ -104,7 +104,7 @@ public class Login extends Fragment {
                     @Override
                     public void onFailure(Call<Examiner> call, Throwable t) {
                         Log.d("demo", t.toString());
-                        Toast.makeText(getContext(), "Server is Down", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Not a QR for Examiner", Toast.LENGTH_SHORT).show();
                     }
                 });
 
