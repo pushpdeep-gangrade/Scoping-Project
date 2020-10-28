@@ -11,6 +11,9 @@ import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
@@ -41,10 +44,15 @@ public class Fragment1 extends Fragment {
     private List<Double> individualScore;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         binding = Fragment1Binding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -62,10 +70,14 @@ public class Fragment1 extends Fragment {
         if (index == 0)
             binding.btnPrev.setVisibility(View.INVISIBLE);
 
+        binding.btnNext.setClickable(false);
         binding.btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int i = binding.radioGroup.getCheckedRadioButtonId();
+                if(i!= -1){
                 binding.radioGroup.clearCheck();
+
                 if (index < questions.size() - 1) {
                     index++;
                     binding.btnPrev.setVisibility(View.VISIBLE);
@@ -77,7 +89,7 @@ public class Fragment1 extends Fragment {
                     binding.btnNext.setVisibility(View.INVISIBLE);
                     binding.btnPrev.setVisibility(View.VISIBLE);
                 }
-            }
+            }}
         });
 
         binding.btnPrev.setOnClickListener(new View.OnClickListener() {
@@ -153,5 +165,25 @@ public class Fragment1 extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.logout:
+                SharedPreferences preferences = getActivity().getSharedPreferences(Login.AuthExaminer, Context.MODE_PRIVATE);
+                preferences.edit().clear();
+                Navigation.findNavController(getView()).navigate(R.id.action_fragment1_to_login);
+                Toast.makeText(getContext(), "logout", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
     }
 }

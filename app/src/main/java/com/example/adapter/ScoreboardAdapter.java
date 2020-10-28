@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -61,15 +62,19 @@ public class ScoreboardAdapter extends RecyclerView.Adapter<ScoreboardAdapter.My
     // you provide access to all the views for a data item in a view holder
     public static class MyViewHolder extends ViewHolder {
         // each data item is just a string in this case
-        public TextView id;
-        public TextView name;
-        public TextView score;
+        public EditText id;
+        public EditText name;
+        public EditText score;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
+
             id = itemView.findViewById(R.id.teamId);
             name = itemView.findViewById(R.id.tvTeamName);
             score = itemView.findViewById(R.id.tvTeamScore);
+            id.setEnabled(false);
+            name.setEnabled(false);
+            score.setEnabled(false);
         }
     }
 }

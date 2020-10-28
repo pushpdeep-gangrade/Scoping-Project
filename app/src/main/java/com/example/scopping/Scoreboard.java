@@ -1,5 +1,6 @@
 package com.example.scopping;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -44,6 +48,13 @@ import static android.content.Context.MODE_PRIVATE;
 public class Scoreboard extends Fragment {
     private FragmentScoreboardBinding binding;
     RecyclerView scoreborad;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     private IntentIntegrator qrScan;
     ScoreboardAdapter scoreboardAdapter;
 
@@ -51,7 +62,6 @@ public class Scoreboard extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         binding = FragmentScoreboardBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -176,5 +186,25 @@ public class Scoreboard extends Fragment {
             }
         }
 
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.logout:
+                SharedPreferences preferences = getActivity().getSharedPreferences(Login.AuthExaminer, Context.MODE_PRIVATE);
+                preferences.edit().clear();
+                Navigation.findNavController(getView()).navigate(R.id.action_scoreboard_to_login);
+                Toast.makeText(getContext(), "logout", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
     }
 }

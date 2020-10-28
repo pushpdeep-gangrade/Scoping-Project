@@ -51,8 +51,6 @@ public class Login extends Fragment {
         qrScan.setBeepEnabled(false);
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
-
     }
 
     @Override
@@ -77,17 +75,14 @@ public class Login extends Fragment {
         if (result != null) {
             if (result.getContents() == null) {
                 Toast.makeText(getContext(), "Result Not Found", Toast.LENGTH_LONG).show();
-
             } else {
-
                 GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-
                 Call<Examiner> call = service.exmainerQRLogin(result.getContents());
                 call.enqueue(new Callback<Examiner>() {
                     @Override
                     public void onResponse(Call<Examiner> call, Response<Examiner> response) {
                         Log.d("demo", response.toString());
-                        if(response.code() == 200) {
+                        if (response.code() == 200) {
                             SharedPreferences sharedPreferences = getActivity().getSharedPreferences(AuthExaminer, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString(getString(R.string.auth), response.headers().get("AuthorizationKey"));
@@ -98,13 +93,11 @@ public class Login extends Fragment {
 
                             Toast.makeText(getContext(), "Welcome " + e1.getFirstname(), Toast.LENGTH_SHORT).show();
                             Navigation.findNavController(getView()).navigate(R.id.action_login_to_scoreboard);
-                        }
-                    else if(response.code() == 401){
-                            Toast.makeText(getContext(), response.message() , Toast.LENGTH_SHORT).show();
-                        }
-                    else if(response.code() == 400) {
+                        } else if (response.code() == 401) {
+                            Toast.makeText(getContext(), response.message(), Toast.LENGTH_SHORT).show();
+                        } else if (response.code() == 400) {
                             Toast.makeText(getContext(), "Token expired", Toast.LENGTH_SHORT).show();
-                        }  else
+                        } else
                             Toast.makeText(getContext(), "Invalid QR", Toast.LENGTH_SHORT).show();
                     }
 

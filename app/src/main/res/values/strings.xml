@@ -13,6 +13,7 @@
     <string name="no_evidence">bmit</string>
     <string name="score">score</string>
 
+    <string name="logout">Logout</string>
 
 
     <string name="qr_login">Scan QR to Login</string>
