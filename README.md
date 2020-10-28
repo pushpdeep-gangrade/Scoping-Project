@@ -13,7 +13,10 @@
 - Rockford Stoller
 
 ## App Mockup <a name="mockup"></a>
-- Mockup: 
+- <strong>Mockup:</strong>
+            <br />
+            <img src="https://github.com/pushpdeep-gangrade/Profile-Android/blob/main/screenshots/SignupDocumentationAPI.png" width=800>
+            <br />
 
 ## Video Demo <a name="demo"></a>
 - App Demo: https://youtu.be/w3Lj8uQ2aZM
