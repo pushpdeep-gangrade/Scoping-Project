@@ -113,7 +113,9 @@ public class Scoreboard extends Fragment {
                 Collections.sort(scoresList, new Comparator<Scores>() {
                     @Override
                     public int compare(Scores scores, Scores t1) {
-                        return (int) (scores.getScore() - t1.getScore());
+                 //     int i = Double.compare(scores.getScore() - t1.getScore());
+                        return Double.compare(scores.getScore() ,t1.getScore());
+                      //  return (int) (scores.getScore() - t1.getScore());
                     }
                 });
 
