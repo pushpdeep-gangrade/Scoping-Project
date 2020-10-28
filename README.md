@@ -13,7 +13,10 @@
 - Rockford Stoller
 
 ## App Mockup <a name="mockup"></a>
-- Mockup: 
+- <strong>Mockup:</strong>
+            <br />
+            <img src="https://github.com/pushpdeep-gangrade/Scoping-Project/blob/13f70583ec4ad05d4ee945475d8cace9c203a6a0/Screen%20Shot%202020-10-28%20at%203.56.41%20PM.png" width=800>
+            <br />
 
 ## Video Demo <a name="demo"></a>
 - App Demo: https://youtu.be/w3Lj8uQ2aZM

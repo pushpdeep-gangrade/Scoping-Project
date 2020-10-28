@@ -1,0 +1,359 @@
+{
+	"info": {
+		"_postman_id": "079dd76c-bddb-41a9-8e48-71dddebfbaa3",
+		"name": "Scoping-Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Update Scores (Need Actual Object ID)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorizationkey",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1X2lkIjoiNWY4ZTNjOWEwYTdlNTIxZGE4NWQ4ZTkwIiwidV9maXJzdCI6IlJvbmFsZCIsInVfbGFzdCI6Ik1jRG9uYWxkIiwiaWF0IjoxNjAzOTI0NjY4LCJleHAiOjE2MDM5MjgyNjh9.utpaH6wmmFnSB_aulYb6liZ3XeCbZgmZ93NODMQgTLY",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"teamname\": \"5f99f886127d3d8c6569821c\",\r\n    \"score\": \"5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://104.248.113.55:5000/v1/teams/update/scores",
+					"protocol": "http",
+					"host": [
+						"104",
+						"248",
+						"113",
+						"55"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"teams",
+						"update",
+						"scores"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Teams and Scores",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorizationkey",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1X2lkIjoiNWY4ZTNjOWEwYTdlNTIxZGE4NWQ4ZTkwIiwidV9maXJzdCI6IlJvbmFsZCIsInVfbGFzdCI6Ik1jRG9uYWxkIiwiaWF0IjoxNjAzOTI0NjY4LCJleHAiOjE2MDM5MjgyNjh9.utpaH6wmmFnSB_aulYb6liZ3XeCbZgmZ93NODMQgTLY",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://104.248.113.55:5000/v1/teams",
+					"protocol": "http",
+					"host": [
+						"104",
+						"248",
+						"113",
+						"55"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Logged In Examiner",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorizationkey",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1X2lkIjoiNWY4ZTNjOWEwYTdlNTIxZGE4NWQ4ZTkwIiwidV9maXJzdCI6IlJvbmFsZCIsInVfbGFzdCI6Ik1jRG9uYWxkIiwiaWF0IjoxNjAzOTI0NjY4LCJleHAiOjE2MDM5MjgyNjh9.utpaH6wmmFnSB_aulYb6liZ3XeCbZgmZ93NODMQgTLY",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://104.248.113.55:5000/v1/examiner/",
+					"protocol": "http",
+					"host": [
+						"104",
+						"248",
+						"113",
+						"55"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"examiner",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Examiner with QR Code",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorizationkey",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1X2lkIjoiNWY4ZTNjOWEwYTdlNTIxZGE4NWQ4ZTkwIiwiaWF0IjoxNjAzOTI0NjIzLCJleHAiOjE2MDM5MjgyMjN9.RRiCNs_MG5ayIhknT-SsJzxrNzfqFhEuI8ovFiQWzuo",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://104.248.113.55:5000/v1/examiner/login/qr",
+					"protocol": "http",
+					"host": [
+						"104",
+						"248",
+						"113",
+						"55"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"examiner",
+						"login",
+						"qr"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Useless API Just to Get Authorization Token to Use QR Login API",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorizationkey",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1X2lkIjoiNWY5MGNkOGM1YmJjYzRlODkyNmQ2ZjI1IiwidV9maXJzdCI6ImFkbWluQGVtYWlsLmNvbSIsInVfbGFzdCI6IiIsImlhdCI6MTYwMzkyNDYwNiwiZXhwIjoxNjAzOTI4MjA2fQ.Syi2jLgz0r2wRDxsEqW7pC7Kldy8Sy4Gh3uQoKVKvp0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"ronmcdon@email.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://104.248.113.55:5000/v1/qr/examiner/",
+					"protocol": "http",
+					"host": [
+						"104",
+						"248",
+						"113",
+						"55"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"qr",
+						"examiner",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Examiners",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorizationkey",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1X2lkIjoiNWY5MGNkOGM1YmJjYzRlODkyNmQ2ZjI1IiwidV9maXJzdCI6ImFkbWluQGVtYWlsLmNvbSIsInVfbGFzdCI6IiIsImlhdCI6MTYwMzkyNDYwNiwiZXhwIjoxNjAzOTI4MjA2fQ.Syi2jLgz0r2wRDxsEqW7pC7Kldy8Sy4Gh3uQoKVKvp0",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://104.248.113.55:5000/v1/examiner/get-all",
+					"protocol": "http",
+					"host": [
+						"104",
+						"248",
+						"113",
+						"55"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"examiner",
+						"get-all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Examiner",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "authorizationkey",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1X2lkIjoiNWY5MGNkOGM1YmJjYzRlODkyNmQ2ZjI1IiwidV9maXJzdCI6ImFkbWluQGVtYWlsLmNvbSIsInVfbGFzdCI6IiIsImlhdCI6MTYwMzkyNDYwNiwiZXhwIjoxNjAzOTI4MjA2fQ.Syi2jLgz0r2wRDxsEqW7pC7Kldy8Sy4Gh3uQoKVKvp0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\": \"name1\",\r\n    \"lastname\": \"name2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://104.248.113.55:5000/v1/examiner/delete",
+					"protocol": "http",
+					"host": [
+						"104",
+						"248",
+						"113",
+						"55"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"examiner",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Examiner",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorizationkey",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1X2lkIjoiNWY5MGNkOGM1YmJjYzRlODkyNmQ2ZjI1IiwidV9maXJzdCI6ImFkbWluQGVtYWlsLmNvbSIsInVfbGFzdCI6IiIsImlhdCI6MTYwMzkyNDYwNiwiZXhwIjoxNjAzOTI4MjA2fQ.Syi2jLgz0r2wRDxsEqW7pC7Kldy8Sy4Gh3uQoKVKvp0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\": \"name1\",\r\n    \"lastname\": \"name2\",\r\n    \"age\": \"33\",\r\n    \"address\": \"address1\",\r\n    \"email\": \"email1@email.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://104.248.113.55:5000/v1/examiner/create",
+					"protocol": "http",
+					"host": [
+						"104",
+						"248",
+						"113",
+						"55"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"examiner",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Team",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorizationkey",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1X2lkIjoiNWY5MGNkOGM1YmJjYzRlODkyNmQ2ZjI1IiwidV9maXJzdCI6ImFkbWluQGVtYWlsLmNvbSIsInVfbGFzdCI6IiIsImlhdCI6MTYwMzkyNDYwNiwiZXhwIjoxNjAzOTI4MjA2fQ.Syi2jLgz0r2wRDxsEqW7pC7Kldy8Sy4Gh3uQoKVKvp0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"teamname\": \"teamname1\",\r\n    \"scores\": []\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://104.248.113.55:5000/v1/teams",
+					"protocol": "http",
+					"host": [
+						"104",
+						"248",
+						"113",
+						"55"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login as Admin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"admin@email.com\",\r\n    \"password\":\"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://104.248.113.55:5000/v1/admin/login",
+					"protocol": "http",
+					"host": [
+						"104",
+						"248",
+						"113",
+						"55"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"admin",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
