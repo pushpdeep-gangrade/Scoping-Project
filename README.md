@@ -16,7 +16,7 @@
 - Mockup: 
 
 ## Video Demo <a name="demo"></a>
-- App Demo: 
+- App Demo: https://youtu.be/w3Lj8uQ2aZM
 
 ## Project Wiki <a name="wiki"></a>
 ### Intro
