@@ -179,7 +179,7 @@ public class Scoreboard extends Fragment {
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
                         Log.d("demo", t.toString());
-                        Toast.makeText(getContext(), "Something went wrong...Please try later!" + t, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Not a QR for Team" + t, Toast.LENGTH_SHORT).show();
                     }
                 });
 
