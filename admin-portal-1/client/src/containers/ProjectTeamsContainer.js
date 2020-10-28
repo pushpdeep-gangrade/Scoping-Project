@@ -73,6 +73,7 @@ export class ProjectTeamsContainer extends Component {
                 _id: team._id,
                 name: team.name,
                 scores: team.scores,
+                date: team.date,
                 average: avg
             };
 

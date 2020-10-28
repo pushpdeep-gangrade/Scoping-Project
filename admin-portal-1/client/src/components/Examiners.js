@@ -67,7 +67,6 @@ export class Examiners extends Component {
                 </DropdownToggle>
                 <DropdownMenu>
                   <DropdownItem onClick={(event) => this.props.onQRCodeClick(event,index)}>Generate QR Code</DropdownItem>
-                  <DropdownItem>View Given Scores</DropdownItem>
                   <DropdownItem onClick={(event) => this.props.onDeleteClick(event,index)}>Delete Examiner</DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>

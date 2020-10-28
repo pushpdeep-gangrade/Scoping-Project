@@ -67,6 +67,7 @@ export class ProjectTeams extends Component {
                         <td headers="rowNum">{index+1}</td>
                         <td headers="teamName">{value.examinerName}</td>
                         <td headers="score">{value.score}</td>
+                        <td headers="date">{value.date}</td>
                     </tr>
                  )
             }
@@ -85,6 +86,7 @@ export class ProjectTeams extends Component {
                             <th>#</th>
                             <th>Examiner Name</th>
                             <th>Score</th>
+                            <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>

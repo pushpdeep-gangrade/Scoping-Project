@@ -492,6 +492,7 @@ app.get('/v1/teams/qr', authMiddleware, authTeams, function (req, res) {
 
 // Add/Update examiner score for a team
 app.post('/v1/teams/update/scores', authMiddleware, function (req, res) {
+    let date = new Date()
 
     if (typeof req.body.teamname === "undefined" || typeof req.body.score === "undefined") {
         res.status(BAD_REQUEST).send("Bad request Check parameters or Body");
@@ -519,7 +520,8 @@ app.post('/v1/teams/update/scores', authMiddleware, function (req, res) {
                     var newvalues = {
                         $set: {
                             "scores.$.examinerName": req.encode_first + " " + req.encode_last,
-                            "scores.$.score": parseInt(req.body.score)
+                            "scores.$.score": parseInt(req.body.score),
+                            "scores.$.date": String(date)
                         }
                     };
 
@@ -544,7 +546,8 @@ app.post('/v1/teams/update/scores', authMiddleware, function (req, res) {
                         $addToSet: {
                             scores: {
                                 examinerName: req.encode_first + " " + req.encode_last,
-                                score: parseInt(req.body.score)
+                                score: parseInt(req.body.score),
+                                date: String(date)
                             }
                         }
                     };
